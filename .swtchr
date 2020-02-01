@@ -1,10 +1,10 @@
 default.debug=
 default.verbose=
 
-php.path=/Applications/MAMP/bin/php
-php.folder=/bin
-php.bin=php
-php.fallback=/usr/bin/php
-php.version=~7.2.0
+php.path=
+php.folder=
+php.bin=
+php.fallback=
+php.version=
 php.debug=
 php.verbose=

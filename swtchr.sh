@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # https://github.com/drpiou/swtchr
-# 0.0.1 - 2020-02-01
+# 0.0.2 - 2020-02-01
 #
 # This script allows you the run different version of bin in specific folders.
 
@@ -10,7 +10,7 @@
 ##### Constants
 
 CONFIG_FILE=.swtchr
-CONFIG_BASE="~/$CONFIG_FILE"
+CONFIG_BASE="$HOME/$CONFIG_FILE"
 
 SEMVER_FILE=swtchr.semver.sh
 SEMVER_URL=https://raw.githubusercontent.com/drpiou/swtchr/master/semver.sh
@@ -124,7 +124,7 @@ local_version=
 local_debug=
 local_verbose=
 
-if [[ -f $CONFIG_BASE ]]; then
+if [[ -e $CONFIG_BASE ]]; then
     while read line; do
         if [[ -n $line ]]; then
             key="$(sed 's/=.*//' <<< "$line")"
@@ -142,6 +142,19 @@ if [[ -f $CONFIG_BASE ]]; then
                     default.verbose ) user_verbose="$value" ;;
                     ? ) ;;
                 esac
+
+                if [[ -n $platform ]]; then
+                    case "$key" in
+                        "${platform}.path" ) user_path="$value" ;;
+                        "${platform}.folder" ) user_folder="$value" ;;
+                        "${platform}.bin" ) user_bin="$value" ;;
+                        "${platform}.fallback" ) user_fallback="$value" ;;
+                        "${platform}.version" ) user_version="$value" ;;
+                        "${platform}.debug" ) user_debug="$value" ;;
+                        "${platform}.verbose" ) user_verbose="$value" ;;
+                        ? ) ;;
+                    esac
+                fi
             fi
         fi
     done < "$CONFIG_BASE"
@@ -165,41 +178,8 @@ if [[ -f $CONFIG_FILE ]]; then
                     default.verbose ) local_verbose="$value" ;;
                     ? ) ;;
                 esac
-            fi
-        fi
-    done < "$CONFIG_FILE"
-fi
 
-if [[ -n $platform ]]; then
-    if [[ -f $CONFIG_BASE ]]; then
-        while read line; do
-            if [[ -n $line ]]; then
-                key="$(sed 's/=.*//' <<< "$line")"
-                value="$(sed 's/^[^=]*=//' <<< "$line")"
-
-                if [[ -n $value ]]; then
-                    case "$key" in
-                        "${platform}.path" ) user_path="$value" ;;
-                        "${platform}.folder" ) user_folder="$value" ;;
-                        "${platform}.bin" ) user_bin="$value" ;;
-                        "${platform}.fallback" ) user_fallback="$value" ;;
-                        "${platform}.version" ) user_version="$value" ;;
-                        "${platform}.debug" ) user_debug="$value" ;;
-                        "${platform}.verbose" ) user_verbose="$value" ;;
-                        ? ) ;;
-                    esac
-                fi
-            fi
-        done < "$CONFIG_BASE"
-    fi
-
-    if [[ -f $CONFIG_FILE ]]; then
-        while read line; do
-            if [[ -n $line ]]; then
-                key="$(sed 's/=.*//' <<< "$line")"
-                value="$(sed 's/^[^=]*=//' <<< "$line")"
-
-                if [[ -n $value ]]; then
+                if [[ -n $platform ]]; then
                     case "$key" in
                         "${platform}.path" ) local_path="$value" ;;
                         "${platform}.folder" ) local_folder="$value" ;;
@@ -212,8 +192,8 @@ if [[ -n $platform ]]; then
                     esac
                 fi
             fi
-        done < "$CONFIG_FILE"
-    fi
+        fi
+    done < "$CONFIG_FILE"
 fi
 
 
