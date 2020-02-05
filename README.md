@@ -118,7 +118,7 @@ php.verbose=
 To call `php` or `composer` with `swtchr`, we can add into `~/.bash_profile`:
 
 ```bash
-phpswtchr() { swtchr "$@" -l php -d; }
+phpswtchr() { swtchr "$*" -l php -d; }
 
 alias php="phpswtchr"
 alias composer="phpswtchr /usr/local/bin/composer"
